@@ -6,5 +6,11 @@ module.exports = defineConfig([
   expoConfig,
   {
     ignores: ['dist/*'],
+    rules: {
+      // Ya está desactivado en eslint-config-expo, pero se puede reforzar aquí si se desea
+      'react/prop-types': 'off',
+      // Asegura el uso de punto y coma obligatorio
+      'semi': 'error',
+    },
   },
 ]);
