@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     color: 'white',
+    padding: 30,
   },
 });
 
