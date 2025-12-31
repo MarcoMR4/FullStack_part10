@@ -1,10 +1,11 @@
 import { Image } from 'expo-image';
 import { StyleSheet } from 'react-native';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import ParallaxScrollView from '@/src/components/parallax-scroll-view';
+import { ThemedText } from '@/src/components/themed-text';
+import { ThemedView } from '@/src/components/themed-view';
+
+import Main from '@/src/components/Main';
 
 export default function HomeScreen() {
   console.log('Rendering HomeScreen');
@@ -20,11 +21,7 @@ export default function HomeScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Welcome to React native courseee</ThemedText>
       </ThemedView>
-
-      <ThemedView>
-        <HelloWave />
-      </ThemedView>
-    
+      <Main />
     </ParallaxScrollView>
   );
 }
