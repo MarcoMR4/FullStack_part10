@@ -1,6 +1,7 @@
 import Constants from 'expo-constants';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import Text from './Text';
 
 import RepositoryList from './RepositoryList';
 
@@ -11,14 +12,15 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     color: 'white',
     padding: 30,
+    gap: 16,
   },
 });
 
 const Main = () => {
   return (
     <View style={styles.container}>
-      <Text style={{ color: 'white' }}>Rate Repository Application</Text>
-        <RepositoryList />
+      <Text color="primary" fontWeight="bold">Rate Repository Application</Text>
+      <RepositoryList />
     </View>
   );
 };

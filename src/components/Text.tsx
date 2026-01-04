@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     color: theme.colors.textPrimary,
     fontSize: theme.fontSizes.body,
     fontFamily: theme.fonts.main,
-    fontWeight: theme.fontWeights.normal,
+    fontWeight: theme.fontWeights.normal as 'normal',
   },
   colorTextSecondary: {
     color: theme.colors.textSecondary,
@@ -19,14 +19,24 @@ const styles = StyleSheet.create({
     fontSize: theme.fontSizes.subheading,
   },
   fontWeightBold: {
-    fontWeight: theme.fontWeights.bold,
+    fontWeight: theme.fontWeights.bold as 'bold',
   },
 });
 
-const Text = ({ color, fontSize, fontWeight, style, ...props }: { color?: any; fontSize?: any; fontWeight?: any; style?: any; [x: string]: any }) => {
+type RNFontWeight = 'normal' | 'bold';
+
+interface TextProps {
+  color?: 'primary' | 'textSecondary';
+  fontSize?: 'body' | 'subheading';
+  fontWeight?: RNFontWeight;
+  style?: any;
+  [x: string]: any;
+}
+
+const Text = ({ color, fontSize, fontWeight, style, ...props }: TextProps) => {
   const textStyle = [
     styles.text,
-    color === 'secondary' && styles.colorTextSecondary,
+    color === 'textSecondary' && styles.colorTextSecondary,
     color === 'primary' && styles.colorPrimary,
     fontSize === 'subheading' && styles.fontSizeSubheading,
     fontWeight === 'bold' && styles.fontWeightBold,
