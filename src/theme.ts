@@ -20,7 +20,7 @@ export interface Theme {
 const theme: Theme = {
   colors: {
     textPrimary: '#24292e',
-    textSecondary: '#586069',
+    textSecondary: '#a1c6f1ff',
     primary: '#0366d6',
   },
   fontSizes: {

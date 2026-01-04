@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-    FlatList,
-    Image,
-    StyleSheet,
-    Text,
-    View,
+  FlatList,
+  Image,
+  StyleSheet,
+  View,
 } from 'react-native';
+import Text from './Text';
 
 const styles = StyleSheet.create({
   separator: {
@@ -80,7 +80,7 @@ const renderItem = ({ item }: { item: Repository }) => (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <Image source={{ uri: item.ownerAvatarUrl }} style={{ width: 48, height: 48, borderRadius: 24, marginRight: 12 }} />
       <View style={{ flex: 1 }}>
-        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>{item.fullName}</Text>
+        <Text color="textSecondary" fontWeight="bold" fontSize="subheading" style={{ marginBottom: 4 }}>{item.fullName}</Text>
         <Text style={{ color: 'white', marginTop: 4 }}>{item.description}</Text>
         <Text style={{ color: '#61dafb', marginTop: 4 }}>{item.language}</Text>
       </View>
@@ -101,7 +101,6 @@ const RepositoryList = () => {
       renderItem={renderItem}
       keyExtractor={item => item.id}
       ItemSeparatorComponent={ItemSeparator}
-      // other props
     />
   );
 };
