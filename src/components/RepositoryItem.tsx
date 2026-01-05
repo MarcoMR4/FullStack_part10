@@ -4,20 +4,8 @@ import {
     View
 } from 'react-native';
 
+import { Repository } from '../types/respository';
 import Text from './Text';
-
-interface Repository {
-  id: string;
-  fullName: string;
-  description: string;
-  language: string;
-  forksCount: number;
-  stargazersCount: number;
-  ratingAverage: number;
-  reviewCount: number;
-  ownerAvatarUrl: string;
-}
-
 
 const RepositoryItem = ({ item }: { item: Repository }) => (
   <View style={{ backgroundColor: '#222', padding: 16, borderRadius: 8 }}>
