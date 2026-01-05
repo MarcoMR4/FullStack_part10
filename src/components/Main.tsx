@@ -11,8 +11,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     color: 'white',
-    padding: 30,
-    gap: 16,
+    padding: 1,
+    gap: 15
   },
 });
 
