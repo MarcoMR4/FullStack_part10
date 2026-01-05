@@ -5,7 +5,9 @@ import {
 } from 'react-native';
 
 import { Repository } from '../types/respository';
+import { overThousandFormatter } from '../utils/quantitiesFormatters';
 import Text from './Text';
+
 
 const RepositoryItem = ({ item }: { item: Repository }) => (
   <View style={{ backgroundColor: '#222', padding: 16, borderRadius: 8 }}>
@@ -18,9 +20,9 @@ const RepositoryItem = ({ item }: { item: Repository }) => (
       </View>
     </View>
     <View style={{ flexDirection: 'column', justifyContent: 'space-between', marginTop: 10 }}>
-      <Text style={{ color: 'white' }}>Stars: {item.stargazersCount}</Text>
-      <Text style={{ color: 'white' }}>Forks: {item.forksCount}</Text>
-      <Text style={{ color: 'white' }}>Reviews: {item.reviewCount}</Text>
+      <Text style={{ color: 'white' }}>Stars: {overThousandFormatter.format(item.stargazersCount)}</Text>
+      <Text style={{ color: 'white' }}>Forks: {overThousandFormatter.format(item.forksCount)}</Text>
+      <Text style={{ color: 'white' }}>Reviews: {overThousandFormatter.format(item.reviewCount)}</Text>
       <Text style={{ color: 'white' }}>Rating: {item.ratingAverage}</Text>
     </View>
   </View>
