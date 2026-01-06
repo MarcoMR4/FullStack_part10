@@ -6,14 +6,15 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native';
+import * as yup from 'yup';
 import FormikTextInput from './forms/FormikTextInput';
 import Text from './Text';
+
 
 const initialValues = {
   username: '',
   password: '',
 };
-
 
 const styles = StyleSheet.create({
   formContainer: {
@@ -37,13 +38,30 @@ const styles = StyleSheet.create({
   },
 });
 
+
+const validationSchema = yup.object().shape({
+  username: yup
+    .string()
+    .min(1, 'Username must be greater or equal to 1')
+    .required('Username is required'),
+  password: yup
+    .string()
+    .min(1, 'Password must be greater or equal to 1')
+    .required('Password is required'),
+});
+
+
 const SignIn = () => {
   const onSubmit = (values: typeof initialValues) => {
     console.log(values);
   };
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
+    <Formik
+      initialValues={initialValues} 
+      onSubmit={onSubmit} 
+      validationSchema={validationSchema}
+    >
       {({ handleSubmit }) => (
         <View style={styles.formContainer}>
           <FormikTextInput name="username" placeholder="Username" />
