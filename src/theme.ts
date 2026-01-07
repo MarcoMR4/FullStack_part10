@@ -23,14 +23,24 @@ const theme: Theme = {
   colors: {
     textPrimary: '#24292e',
     textSecondary: '#a1c6f1ff',
-    primary: '#0366d6',
+    primary: Platform.select({
+      android: '#0366d6',
+      ios: '#14a40aff',
+      web: '#d64903ff',
+      default: '#480d80ff',
+    }) as string,
   },
   fontSizes: {
     body: 14,
     subheading: 16,
   },
   fonts: {
-    main: 'System',
+    main: Platform.select({
+      ios: 'system-ui',
+      android: 'sans-serif',
+      web: "Arial",
+      default: 'System',
+    }) as string,
   },
   fontWeights: {
     normal: 'normal',

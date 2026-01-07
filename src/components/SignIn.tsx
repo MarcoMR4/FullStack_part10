@@ -7,6 +7,7 @@ import {
   View
 } from 'react-native';
 import * as yup from 'yup';
+import theme from '../theme';
 import FormikTextInput from './forms/FormikTextInput';
 import Text from './Text';
 
@@ -19,13 +20,14 @@ const initialValues = {
 const styles = StyleSheet.create({
   formContainer: {
     padding: 16,
+    paddingTop: 40,
     backgroundColor: '#fff',
     borderRadius: 8,
     gap: 30,
     flex: 1,
   },
   button: {
-    backgroundColor: '#007bff',
+    backgroundColor: theme.colors.primary,
     borderRadius: 4,
     alignItems: 'center',
     paddingVertical: 12,
@@ -37,7 +39,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
 
 const validationSchema = yup.object().shape({
   username: yup
