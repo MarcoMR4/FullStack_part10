@@ -1,11 +1,10 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-
 import AppBar from '@/src/components/AppBar';
-import { HapticTab } from '@/src/components/haptic-tab';
+import { HapticTab } from '@/src/components/ui/haptic-tab';
 import { IconSymbol } from '@/src/components/ui/icon-symbol';
 import { useColorScheme } from '@/src/hooks/use-color-scheme';
 import { Colors } from '@/src/theme';
+import { Tabs } from 'expo-router';
+import React from 'react';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();

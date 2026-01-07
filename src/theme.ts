@@ -36,9 +36,9 @@ const theme: Theme = {
   },
   fonts: {
     main: Platform.select({
-      ios: 'system-ui',
-      android: 'sans-serif',
-      web: "Arial",
+      ios: 'Arial',
+      android: 'Roboto',
+      web: "sans-serif",
       default: 'System',
     }) as string,
   },
