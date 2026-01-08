@@ -12,6 +12,9 @@ import FormikTextInput from './forms/FormikTextInput';
 import Text from './Text';
 
 
+import { useThemeScheme } from '../context/ThemeContext';
+
+
 const initialValues = {
   username: '',
   password: '',
@@ -21,7 +24,6 @@ const styles = StyleSheet.create({
   formContainer: {
     padding: 16,
     paddingTop: 40,
-    backgroundColor: '#fff',
     borderRadius: 8,
     gap: 30,
     flex: 1,
@@ -51,11 +53,13 @@ const validationSchema = yup.object().shape({
     .required('Password is required'),
 });
 
-
 const SignIn = () => {
+  const { themeScheme } = useThemeScheme();
   const onSubmit = (values: typeof initialValues) => {
     console.log(values);
   };
+
+  const backgroundColor = themeScheme === 'dark' ? '#181818' : '#fff';
 
   return (
     <Formik
@@ -64,7 +68,7 @@ const SignIn = () => {
       validationSchema={validationSchema}
     >
       {({ handleSubmit }) => (
-        <View style={styles.formContainer}>
+        <View style={{ ...styles.formContainer, backgroundColor }}>
           <FormikTextInput name="username" placeholder="Username" />
           <FormikTextInput name="password" placeholder="Password" secureTextEntry />
           <TouchableWithoutFeedback onPress={() => handleSubmit()}>
