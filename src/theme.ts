@@ -31,9 +31,11 @@ export interface Theme {
     normal: 'normal';
     bold: 'bold';
   };
+  Item:{
+    backgroundColor:string;
+  }
 }
 
-// Función auxiliar para obtener el color primary según la plataforma
 function getPlatformPrimaryColor() {
   return Platform.select({
     android: '#0366d6',
@@ -46,9 +48,9 @@ function getPlatformPrimaryColor() {
 export const getTheme = (scheme: 'light' | 'dark' = 'dark'): Theme => ({
   colors: {
     textPrimary: scheme === 'dark' ? '#ECEDEE' : '#24292e',
-    textSecondary: scheme === 'dark' ? '#a1c6f1ff' : '#687076',
+    textSecondary: scheme === 'dark' ? '#a1c6f1ff' : '#091877ff',
     primary: getPlatformPrimaryColor(),
-    background: scheme === 'dark' ? '#1c1e21ff' : '#ffffffaa',
+    background: scheme === 'dark' ? '#000000ff' : '#ffffffaa',
     tint: scheme === 'dark' ? '#fff' : '#0a7ea4',
     icon: scheme === 'dark' ? '#9BA1A6' : '#687076',
     tabIconDefault: scheme === 'dark' ? '#9BA1A6' : '#687076',
@@ -79,6 +81,9 @@ export const getTheme = (scheme: 'light' | 'dark' = 'dark'): Theme => ({
     normal: 'normal',
     bold: 'bold',
   },
+  Item:{
+    backgroundColor: scheme === 'dark' ? '#2a2c2eff' : '#b6b6b0ff',
+  }
 });
 
 const theme = getTheme();
