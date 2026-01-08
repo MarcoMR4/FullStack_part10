@@ -1,24 +1,11 @@
 import { useField } from 'formik';
 import React from 'react';
-import { StyleSheet } from 'react-native';
-
 import { useThemeScheme } from '../../context/ThemeContext';
 import { getTheme } from '../../theme';
 import Text from '../Text';
 import TextInput from './TextInput';
 
-const styles = StyleSheet.create({
-  errorText: {
-    marginTop: 5,
-    color: '#d73a4a',
-    fontSize: 12,
-  },
-  textInput: {
-    borderWidth: 1,
-    borderRadius: 4,
-    padding: 10,
-  },
-});
+// Los estilos ahora se obtienen desde theme.forms
 
 interface FormikTextInputProps {
   name: string;
@@ -31,8 +18,20 @@ const FormikTextInput = ({ name, ...props }: FormikTextInputProps) => {
   const { themeScheme } = useThemeScheme();
   const themed = getTheme(themeScheme);
 
-  const inputBorderColor = showError ? styles.errorText.color : themed.colors.textPrimary;
+  const inputBorderColor = showError ? themed.forms.errorColor : themed.colors.textPrimary;
+
   const placeholderTextColor = themed.forms.placeholder;
+  
+  const errorTextStyle = {
+    marginTop: themed.forms.errorMarginTop,
+    color: themed.forms.errorColor,
+    fontSize: themed.forms.errorFontSize,
+  };
+  const textInputStyle = {
+    borderWidth: themed.forms.textInputBorderWidth,
+    borderRadius: themed.forms.textInputBorderRadius,
+    padding: themed.forms.textInputPadding,
+  };
 
   return (
     <>
@@ -41,11 +40,11 @@ const FormikTextInput = ({ name, ...props }: FormikTextInputProps) => {
         onBlur={() => helpers.setTouched(true)}
         value={field.value}
         error={!!showError}
-        style={[styles.textInput, { borderColor: inputBorderColor }]}
+        style={[textInputStyle, { borderColor: inputBorderColor }]}
         placeholderTextColor={placeholderTextColor}
         {...props}
       />
-      {showError && <Text style={styles.errorText}>{meta.error}</Text>}
+      {showError && <Text style={errorTextStyle}>{meta.error}</Text>}
     </>
   );
 };

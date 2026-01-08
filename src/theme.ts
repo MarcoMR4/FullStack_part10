@@ -13,7 +13,12 @@ export interface Theme {
   };
   forms: {
     placeholder: string;
-    // Puedes agregar más colores de formularios aquí
+    errorColor: string;
+    errorFontSize: number;
+    errorMarginTop: number;
+    textInputBorderWidth: number;
+    textInputBorderRadius: number;
+    textInputPadding: number;
   };
   fontSizes: {
     body: number;
@@ -38,7 +43,6 @@ export const getTheme = (scheme: 'light' | 'dark' = 'dark'): Theme => ({
       web: '#d64903ff',
       default:'#480d80ff',
     }) as string,
-    // Colores extendidos de Colors
     background: scheme === 'dark' ? '#1c1e21ff' : '#ffffffaa',
     tint: scheme === 'dark' ? '#fff' : '#0a7ea4',
     icon: scheme === 'dark' ? '#9BA1A6' : '#687076',
@@ -47,6 +51,12 @@ export const getTheme = (scheme: 'light' | 'dark' = 'dark'): Theme => ({
   },
   forms: {
     placeholder: scheme === 'dark' ? '#a1c6f1ff' : '#687076',
+    errorColor: '#d73a4a',
+    errorFontSize: 12,
+    errorMarginTop: 5,
+    textInputBorderWidth: 1,
+    textInputBorderRadius: 4,
+    textInputPadding: 10,
   },
   fontSizes: {
     body: 14,
