@@ -1,15 +1,14 @@
 import AppBar from '@/src/components/AppBar';
 import { HapticTab } from '@/src/components/ui/haptic-tab';
 import { IconSymbol } from '@/src/components/ui/icon-symbol';
-import { useColorScheme } from '@/src/hooks/use-color-scheme';
+import { useThemeScheme } from '@/src/context/ThemeContext';
 import { getTheme } from '@/src/theme';
 import { Tabs } from 'expo-router';
 import React from 'react';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
-  const theme = getTheme(colorScheme ?? 'light');
+  const { themeScheme } = useThemeScheme();
+  const theme = getTheme(themeScheme);
   return (
     <>
       <AppBar />

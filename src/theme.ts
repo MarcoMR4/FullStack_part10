@@ -33,21 +33,26 @@ export interface Theme {
   };
 }
 
+// Función auxiliar para obtener el color primary según la plataforma
+function getPlatformPrimaryColor() {
+  return Platform.select({
+    android: '#0366d6',
+    ios: '#14a40aff',
+    web: '#d64903ff',
+    default: '#480d80ff',
+  }) as string;
+}
+
 export const getTheme = (scheme: 'light' | 'dark' = 'dark'): Theme => ({
   colors: {
     textPrimary: scheme === 'dark' ? '#ECEDEE' : '#24292e',
     textSecondary: scheme === 'dark' ? '#a1c6f1ff' : '#687076',
-    primary: Platform.select({
-      android: '#0366d6',
-      ios: '#14a40aff',
-      web: '#d64903ff',
-      default:'#480d80ff',
-    }) as string,
+    primary: getPlatformPrimaryColor(),
     background: scheme === 'dark' ? '#1c1e21ff' : '#ffffffaa',
     tint: scheme === 'dark' ? '#fff' : '#0a7ea4',
     icon: scheme === 'dark' ? '#9BA1A6' : '#687076',
     tabIconDefault: scheme === 'dark' ? '#9BA1A6' : '#687076',
-    tabIconSelected: scheme === 'dark' ? '#fff' : '#0a7ea4',
+    tabIconSelected: scheme === 'dark' ? '#fff' : getPlatformPrimaryColor(),
   },
   forms: {
     placeholder: scheme === 'dark' ? '#a1c6f1ff' : '#687076',
