@@ -2,7 +2,8 @@ import { useField } from 'formik';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-import theme from '../../theme';
+import { useThemeScheme } from '../../context/ThemeContext';
+import { getTheme } from '../../theme';
 import Text from '../Text';
 import TextInput from './TextInput';
 
@@ -27,8 +28,11 @@ interface FormikTextInputProps {
 const FormikTextInput = ({ name, ...props }: FormikTextInputProps) => {
   const [field, meta, helpers] = useField(name);
   const showError = meta.touched && meta.error;
+  const { themeScheme } = useThemeScheme();
+  const themed = getTheme(themeScheme);
 
-  const inputBorderColor = showError ? styles.errorText.color : theme.colors.textPrimary;
+  const inputBorderColor = showError ? styles.errorText.color : themed.colors.textPrimary;
+  const placeholderTextColor = themed.forms.placeholder;
 
   return (
     <>
@@ -38,6 +42,7 @@ const FormikTextInput = ({ name, ...props }: FormikTextInputProps) => {
         value={field.value}
         error={!!showError}
         style={[styles.textInput, { borderColor: inputBorderColor }]}
+        placeholderTextColor={placeholderTextColor}
         {...props}
       />
       {showError && <Text style={styles.errorText}>{meta.error}</Text>}

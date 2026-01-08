@@ -11,6 +11,10 @@ export interface Theme {
     tabIconDefault: string;
     tabIconSelected: string;
   };
+  forms: {
+    placeholder: string;
+    // Puedes agregar más colores de formularios aquí
+  };
   fontSizes: {
     body: number;
     subheading: number;
@@ -40,6 +44,9 @@ export const getTheme = (scheme: 'light' | 'dark' = 'dark'): Theme => ({
     icon: scheme === 'dark' ? '#9BA1A6' : '#687076',
     tabIconDefault: scheme === 'dark' ? '#9BA1A6' : '#687076',
     tabIconSelected: scheme === 'dark' ? '#fff' : '#0a7ea4',
+  },
+  forms: {
+    placeholder: scheme === 'dark' ? '#a1c6f1ff' : '#687076',
   },
   fontSizes: {
     body: 14,
