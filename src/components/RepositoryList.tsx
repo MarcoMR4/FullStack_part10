@@ -10,7 +10,7 @@ import RepositoryItem from './RepositoryItem';
 
 const styles = StyleSheet.create({
   separator: {
-    height: 10,
+    height: 20,
   },
   container:{
     padding: 10,

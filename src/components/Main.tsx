@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     color: 'white',
     padding: 1,
-    gap: 15
+    gap: 15,
   },
 });
 
