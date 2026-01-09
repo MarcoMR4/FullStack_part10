@@ -11,5 +11,13 @@ interface Repository {
   ownerAvatarUrl: string;
 }
 
-export type { Repository };
+interface RepositoryEdge {
+  node: Repository;
+}
+
+interface Repositories {
+  edges: RepositoryEdge[];
+}
+
+export type { Repository, RepositoryEdge, Repositories };
 
