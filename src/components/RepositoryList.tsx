@@ -25,12 +25,8 @@ const RepositoryList = () => {
   const [repositories, setRepositories] = useState<Repositories | undefined>();
 
   const fetchRepositories = async () => {
-    // Replace the IP address part with your own IP address!
     const response = await fetch(`${baseApi}repositories`);
     const json = await response.json();
-
-    console.log(json);
-
     setRepositories(json);
   };
 
