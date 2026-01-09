@@ -8,6 +8,8 @@ import {
 import { Repositories } from '../types/respository';
 import RepositoryItem from './RepositoryItem';
 
+import baseApi from '../constants/baseApi';
+
 const styles = StyleSheet.create({
   separator: {
     height: 20,
@@ -24,7 +26,7 @@ const RepositoryList = () => {
 
   const fetchRepositories = async () => {
     // Replace the IP address part with your own IP address!
-    const response = await fetch('http://192.168.1.9:5000/api/repositories');
+    const response = await fetch(`${baseApi}repositories`);
     const json = await response.json();
 
     console.log(json);
