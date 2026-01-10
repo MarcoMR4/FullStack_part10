@@ -1,12 +1,25 @@
 import AppBar from '@/src/components/AppBar';
 import { HapticTab } from '@/src/components/ui/haptic-tab';
 import { IconSymbol } from '@/src/components/ui/icon-symbol';
-import { useThemeScheme } from '@/src/context/ThemeContext';
+import { ThemeProviderCustom, useThemeScheme } from '@/src/context/ThemeContext';
 import { getTheme } from '@/src/theme';
+import { createApolloClient } from '@/src/utils/apolloClient';
+import { ApolloProvider } from '@apollo/client/react';
 import { Tabs } from 'expo-router';
 import React from 'react';
 
 export default function TabLayout() {
+
+  return (
+    <ApolloProvider client={createApolloClient}>
+      <ThemeProviderCustom>
+        <TabLayoutInner />
+      </ThemeProviderCustom>
+    </ApolloProvider>
+  );
+}
+
+function TabLayoutInner() {
   const { themeScheme } = useThemeScheme();
   const theme = getTheme(themeScheme);
   return (

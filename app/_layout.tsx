@@ -2,6 +2,8 @@ import {
   ThemeProviderCustom,
   useThemeScheme
 } from '@/src/context/ThemeContext';
+import { createApolloClient } from '@/src/utils/apolloClient';
+import { ApolloProvider } from '@apollo/client/react';
 import {
   DarkTheme,
   DefaultTheme,
@@ -10,6 +12,7 @@ import {
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
+
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -30,8 +33,10 @@ function RootLayoutInner() {
 
 export default function RootLayout() {
   return (
-    <ThemeProviderCustom>
-      <RootLayoutInner />
-    </ThemeProviderCustom>
+    <ApolloProvider client={createApolloClient}>
+      <ThemeProviderCustom>
+        <RootLayoutInner />
+      </ThemeProviderCustom>
+    </ApolloProvider>
   );
 }
