@@ -9,7 +9,7 @@ import {
   DefaultTheme,
   ThemeProvider
 } from '@react-navigation/native';
-import Constants from 'expo-constants';
+// import Constants from 'expo-constants';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
@@ -33,7 +33,7 @@ function RootLayoutInner() {
 }
 
 export default function RootLayout() {
-  console.log(Constants.expoConfig);
+  // console.log(Constants.expoConfig?.extra?.env);
   return (
     <ApolloProvider client={createApolloClient}>
       <ThemeProviderCustom>

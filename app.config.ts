@@ -45,7 +45,7 @@ export default {
       reactCompiler: true
     },
     extra: {
-        env: 'development',
+        env: process.env.ENV || 'development',
         serverUrl: process.env.SERVER_URL || 'http://localhost:5000'
     }
   }
