@@ -46,7 +46,7 @@ export default {
     },
     extra: {
         env: process.env.ENV || 'development',
-        serverUrl: process.env.SERVER_URL || 'http://localhost:5000'
+        serverUrl: process.env.SERVER_URI || 'http://localhost:5000'
     }
   }
 };
