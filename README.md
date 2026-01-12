@@ -48,3 +48,16 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+## Environment Variables
+
+To connect your Expo app to your backend server, you need to set the `SERVER_URL` environment variable.
+
+1. Copy the file `.env.example` to `.env` in the root of the project.
+2. Edit the `SERVER_URL` value to match the IP address and port of your backend server that is accessible from your device running the Expo app. For example:
+
+   ```env
+   SERVER_URL=http://192.168.1.100:5000
+   ```
+
+> **Note:** The IP address must be reachable from your mobile device. If you are using a local server, make sure both your computer and device are on the same network.
