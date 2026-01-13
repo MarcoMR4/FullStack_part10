@@ -31,6 +31,7 @@ const FormikTextInput = ({ name, ...props }: FormikTextInputProps) => {
     borderWidth: themed.forms.textInputBorderWidth,
     borderRadius: themed.forms.textInputBorderRadius,
     padding: themed.forms.textInputPadding,
+    color: themed.colors.textPrimary,
   };
 
   return (
