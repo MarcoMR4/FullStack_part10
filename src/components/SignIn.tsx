@@ -12,7 +12,9 @@ import FormikTextInput from './forms/FormikTextInput';
 import Text from './Text';
 
 import { useThemeScheme } from '../context/ThemeContext';
+
 import { useSignIn } from '../hooks/useSignIn';
+import AuthStorage from '../utils/authStorage';
 
 
 const initialValues = {
@@ -61,6 +63,14 @@ const SignIn = () => {
     try {
       const result = await signIn(values);
       console.log('result: ', result);
+      const accessToken = result?.data?.authenticate?.accessToken;
+      if (accessToken) {
+        const authStorage = new AuthStorage();
+        await authStorage.setAccessToken(accessToken);
+        console.log('Access token saved to storage ');
+        const accessTokenStored = await authStorage.getAccessToken();
+        console.log(' Access token retrieved from storage: ', accessTokenStored);
+      }
     } catch (e) {
       console.error(' Error trying to sign in', e);
     }
