@@ -11,8 +11,8 @@ import theme from '../theme';
 import FormikTextInput from './forms/FormikTextInput';
 import Text from './Text';
 
-
 import { useThemeScheme } from '../context/ThemeContext';
+import { useSignIn } from '../hooks/useSignIn';
 
 
 const initialValues = {
@@ -55,8 +55,15 @@ const validationSchema = yup.object().shape({
 
 const SignIn = () => {
   const { themeScheme } = useThemeScheme();
-  const onSubmit = (values: typeof initialValues) => {
-    console.log(values);
+  const { signIn } = useSignIn();
+
+  const onSubmit = async (values: typeof initialValues) => {
+    try {
+      const result = await signIn(values);
+      console.log('result: ', result);
+    } catch (e) {
+      console.error(' Error trying to sign in', e);
+    }
   };
 
   const backgroundColor = themeScheme === 'dark' ? '#181818' : '#fff';
