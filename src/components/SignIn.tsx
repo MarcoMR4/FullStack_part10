@@ -1,10 +1,10 @@
 
 import { Formik } from 'formik';
-import React from 'react';
+import React, { useContext } from 'react';
 import {
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View
+    StyleSheet,
+    TouchableWithoutFeedback,
+    View
 } from 'react-native';
 import * as yup from 'yup';
 import theme from '../theme';
@@ -13,8 +13,10 @@ import Text from './Text';
 
 import { useThemeScheme } from '../context/ThemeContext';
 
+import { useApolloClient } from '@apollo/client/react';
+import { useRouter } from 'expo-router';
+import AuthStorageContext from '../context/AuthStorageContext';
 import { useSignIn } from '../hooks/useSignIn';
-import AuthStorage from '../utils/authStorage';
 
 
 const initialValues = {
@@ -58,21 +60,27 @@ const validationSchema = yup.object().shape({
 const SignIn = () => {
   const { themeScheme } = useThemeScheme();
   const { signIn } = useSignIn();
+  const authStorage = useContext(AuthStorageContext);
+  const apolloClient = useApolloClient();
+  const router = useRouter();
 
   const onSubmit = async (values: typeof initialValues) => {
     try {
       const result = await signIn(values);
       console.log('result: ', result);
       const accessToken = result?.data?.authenticate?.accessToken;
-      if (accessToken) {
-        const authStorage = new AuthStorage();
+      if (accessToken && authStorage) {
         await authStorage.setAccessToken(accessToken);
-        console.log('Access token saved to storage ');
-        const accessTokenStored = await authStorage.getAccessToken();
-        console.log(' Access token retrieved from storage: ', accessTokenStored);
+        console.log('Access token saved to storage');
+        
+        // Reset Apollo cache to refetch queries with new auth token
+        await apolloClient.resetStore();
+        
+        // Navigate to home
+        router.replace('/');
       }
     } catch (e) {
-      console.error(' Error trying to sign in', e);
+      console.error('Error trying to sign in', e);
     }
   };
 

@@ -10,6 +10,7 @@ export interface Theme {
     icon: string;
     tabIconDefault: string;
     tabIconSelected: string;
+    error: string;
   };
   forms: {
     placeholder: string;
@@ -55,6 +56,7 @@ export const getTheme = (scheme: 'light' | 'dark' = 'dark'): Theme => ({
     icon: scheme === 'dark' ? '#9BA1A6' : '#687076',
     tabIconDefault: scheme === 'dark' ? '#9BA1A6' : '#687076',
     tabIconSelected: scheme === 'dark' ? '#fff' : getPlatformPrimaryColor(),
+    error: '#d73a4a',
   },
   forms: {
     placeholder: scheme === 'dark' ? '#a1c6f1ff' : '#687076',

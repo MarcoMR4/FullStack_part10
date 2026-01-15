@@ -43,4 +43,13 @@ export const GET_RATING_AVERAGE_SORTED_REPOSITORIES = gql`
     }
 `;
 
+export const GET_ME = gql`
+    query {
+        me {
+            id
+            username
+        }
+    }
+`;
+
 // other queries...
