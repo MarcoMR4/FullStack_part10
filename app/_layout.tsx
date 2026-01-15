@@ -2,7 +2,7 @@ import {
   ThemeProviderCustom,
   useThemeScheme
 } from '@/src/context/ThemeContext';
-import { createApolloClient } from '@/src/utils/apolloClient';
+import createApolloClient from '@/src/utils/apolloClient';
 import { ApolloProvider } from '@apollo/client/react';
 import {
   DarkTheme,
@@ -10,10 +10,11 @@ import {
   ThemeProvider
 } from '@react-navigation/native';
 // import Constants from 'expo-constants';
+import AuthStorageContext from '@/src/context/AuthStorageContext';
+import AuthStorage from '@/src/utils/authStorage';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
-
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -32,13 +33,18 @@ function RootLayoutInner() {
   );
 }
 
+const authStorage = new AuthStorage();
+const apolloClient = createApolloClient(authStorage);
+
 export default function RootLayout() {
   // console.log(Constants.expoConfig?.extra?.env);
   return (
-    <ApolloProvider client={createApolloClient}>
-      <ThemeProviderCustom>
-        <RootLayoutInner />
-      </ThemeProviderCustom>
-    </ApolloProvider>
+    <AuthStorageContext.Provider value={authStorage}>
+      <ApolloProvider client={apolloClient}>
+        <ThemeProviderCustom>
+          <RootLayoutInner />
+        </ThemeProviderCustom>
+      </ApolloProvider>
+    </AuthStorageContext.Provider>
   );
 }
