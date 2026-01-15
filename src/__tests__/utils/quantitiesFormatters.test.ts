@@ -1,4 +1,4 @@
-import { overThousandFormatter } from '../utils/quantitiesFormatters';
+import { overThousandFormatter } from '../../utils/quantitiesFormatters';
 
 describe('overThousandFormatter', () => {
   it('formats units (1)', () => {
