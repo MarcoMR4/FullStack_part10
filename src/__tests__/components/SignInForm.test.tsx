@@ -6,7 +6,7 @@ import SignInContainer from "../../components/SignInContainer";
 describe("SignInContainer", () => {
   it("calls onSubmit with correct values when form is submitted", async () => {
     const onSubmit = jest.fn();
-    const { getByTestId } = render(
+    const { getByTestId, queryByText } = render(
       <ThemeProviderCustom>
         <SignInContainer onSubmit={onSubmit} />
       </ThemeProviderCustom>
@@ -23,5 +23,9 @@ describe("SignInContainer", () => {
       username: "kalle",
       password: "password",
     });
+    expect(queryByText("Cargando...")).toBeNull();
+    expect(
+      queryByText("Texto inexistente y sin sentido que no debería estar")
+    ).toBeNull();
   });
 });
