@@ -1,21 +1,10 @@
 import { useQuery } from "@apollo/client/react";
-import React from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { useEffect } from "react";
+import { View } from "react-native";
 import { GET_REPOSITORIES } from "../../graphql/queries";
-import { Repository, RepositoryEdge } from "../../types/respository";
-import RepositoryItem from "../RepositoryItem";
+import { RepositoryEdge } from "../../types/respository";
 import Text from "../Text";
-
-const styles = StyleSheet.create({
-  separator: {
-    height: 20,
-  },
-  container: {
-    padding: 10,
-  },
-});
-
-const ItemSeparator = () => <View style={styles.separator} />;
+import RepositoryListContainer from "./RepositoryListContainer";
 
 interface GetRepositoriesData {
   repositories: {
@@ -24,32 +13,25 @@ interface GetRepositoriesData {
 }
 
 const RepositoryList = () => {
-  const { data, loading, error } = useQuery<GetRepositoriesData>(
-    GET_REPOSITORIES,
-    {
-      onCompleted: (d) => {
-        console.log("GET_REPOSITORIES data:", JSON.stringify(d, null, 2));
-      },
-      onError: (e) => {
-        console.log("GET_REPOSITORIES error:", JSON.stringify(e, null, 2));
-        console.log("graphQLErrors:", e.graphQLErrors);
-        console.log("networkError:", e.networkError);
-      },
+  const { data, loading, error }: any =
+    useQuery<GetRepositoriesData>(GET_REPOSITORIES);
+
+  useEffect(() => {
+    if (error) {
+      // Puedes castear error como ApolloError si necesitas acceder a networkError/graphQLErrors
+      // const apolloError = error as ApolloError;
+      // console.log("networkError:", apolloError.networkError);
+      // console.log("graphQLErrors:", apolloError.graphQLErrors);
+      console.log("GET_REPOSITORIES error:", JSON.stringify(error, null, 2));
     }
-  );
+  }, [error]);
+
+  const repositories = data?.repositories ?? { edges: [] };
 
   if (loading)
     return (
       <View>
-        <FlatList
-          data={[]}
-          renderItem={null}
-          ListEmptyComponent={
-            <View>
-              <Text>Loading...</Text>
-            </View>
-          }
-        />
+        <Text>Loading...</Text>
       </View>
     );
 
@@ -64,25 +46,14 @@ const RepositoryList = () => {
         {error.graphQLErrors?.length ? (
           <Text>
             GraphQLErrors:{" "}
-            {error.graphQLErrors.map((e) => e.message).join(" | ")}
+            {error.graphQLErrors.map((e: any) => e.message).join(" | ")}
           </Text>
         ) : null}
       </View>
     );
   }
 
-  const repositoryNodes: Repository[] =
-    data?.repositories?.edges?.map((edge) => edge.node) ?? [];
-
-  return (
-    <FlatList
-      data={repositoryNodes}
-      renderItem={({ item }) => <RepositoryItem item={item} />}
-      keyExtractor={(item) => item.id}
-      ItemSeparatorComponent={ItemSeparator}
-      style={styles.container}
-    />
-  );
+  return <RepositoryListContainer repositories={repositories} />;
 };
 
 export default RepositoryList;
