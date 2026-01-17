@@ -1,7 +1,7 @@
 // Importar el contenedor y dependencias con ESM6
 import { render } from "@testing-library/react-native";
 import React from "react";
-import RepositoryListContainer from "../../components/RepositoryList/RepositoryListContainer";
+import RepositoryListContainer from "../../components/repositorylist/RepositoryListContainer";
 import { ThemeProviderCustom } from "../../context/ThemeContext";
 
 describe("RepositoryList", () => {
