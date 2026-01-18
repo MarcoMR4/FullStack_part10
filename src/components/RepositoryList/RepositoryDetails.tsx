@@ -15,6 +15,7 @@ import {
     StyleSheet,
     View,
 } from "react-native";
+import RepositoryReviews from "./RepositoryReviews";
 
 // Componente para mostrar cada estadística
 const StatsItem = ({
@@ -153,6 +154,23 @@ const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({
           onPress={() => Linking.openURL(repo.url)}
           color={theme.colors.primary}
         />
+        {repo.reviews?.edges?.length > 0 && (
+          <View style={{ marginTop: 24 }}>
+            <Text
+              fontWeight="bold"
+              style={{
+                color: theme.colors.textSecondary,
+                marginBottom: 8,
+                fontSize: 16,
+              }}
+            >
+              Reviews
+            </Text>
+            <RepositoryReviews
+              reviews={repo.reviews.edges.map((e: any) => e.node)}
+            />
+          </View>
+        )}
       </View>
     </ScrollView>
   );

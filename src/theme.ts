@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Platform } from "react-native";
 
 export interface Theme {
   colors: {
@@ -11,6 +11,7 @@ export interface Theme {
     tabIconDefault: string;
     tabIconSelected: string;
     error: string;
+    date: string;
   };
   forms: {
     placeholder: string;
@@ -29,38 +30,39 @@ export interface Theme {
     main: string;
   };
   fontWeights: {
-    normal: 'normal';
-    bold: 'bold';
+    normal: "normal";
+    bold: "bold";
   };
-  Item:{
-    backgroundColor:string;
-  }
+  Item: {
+    backgroundColor: string;
+  };
 }
 
 function getPlatformPrimaryColor() {
   return Platform.select({
-    android: '#0366d6',
-    ios: '#14a40aff',
-    web: '#d64903ff',
-    default: '#480d80ff',
+    android: "#0366d6",
+    ios: "#14a40aff",
+    web: "#d64903ff",
+    default: "#480d80ff",
   }) as string;
 }
 
-export const getTheme = (scheme: 'light' | 'dark' = 'dark'): Theme => ({
+export const getTheme = (scheme: "light" | "dark" = "dark"): Theme => ({
   colors: {
-    textPrimary: scheme === 'dark' ? '#ECEDEE' : '#24292e',
-    textSecondary: scheme === 'dark' ? '#a1c6f1ff' : '#091877ff',
+    textPrimary: scheme === "dark" ? "#ECEDEE" : "#24292e",
+    textSecondary: scheme === "dark" ? "#a1c6f1ff" : "rgb(31, 50, 135)",
     primary: getPlatformPrimaryColor(),
-    background: scheme === 'dark' ? '#000000ff' : '#ffffffaa',
-    tint: scheme === 'dark' ? '#fff' : '#0a7ea4',
-    icon: scheme === 'dark' ? '#9BA1A6' : '#687076',
-    tabIconDefault: scheme === 'dark' ? '#9BA1A6' : '#687076',
-    tabIconSelected: scheme === 'dark' ? '#fff' : getPlatformPrimaryColor(),
-    error: '#d73a4a',
+    background: scheme === "dark" ? "#000000ff" : "#ffffffaa",
+    tint: scheme === "dark" ? "#fff" : "#0a7ea4",
+    icon: scheme === "dark" ? "#9BA1A6" : "#687076",
+    tabIconDefault: scheme === "dark" ? "#9BA1A6" : "#687076",
+    tabIconSelected: scheme === "dark" ? "#fff" : getPlatformPrimaryColor(),
+    error: "#d73a4a",
+    date: scheme === "dark" ? "#7a7a7a" : "#bdbdbd",
   },
   forms: {
-    placeholder: scheme === 'dark' ? '#a1c6f1ff' : '#687076',
-    errorColor: '#d73a4a',
+    placeholder: scheme === "dark" ? "#a1c6f1ff" : "#687076",
+    errorColor: "#d73a4a",
     errorFontSize: 12,
     errorMarginTop: 5,
     textInputBorderWidth: 1,
@@ -73,19 +75,19 @@ export const getTheme = (scheme: 'light' | 'dark' = 'dark'): Theme => ({
   },
   fonts: {
     main: Platform.select({
-      ios: 'Arial',
-      android: 'Roboto',
+      ios: "Arial",
+      android: "Roboto",
       web: "sans-serif",
-      default: 'System',
+      default: "System",
     }) as string,
   },
   fontWeights: {
-    normal: 'normal',
-    bold: 'bold',
+    normal: "normal",
+    bold: "bold",
   },
-  Item:{
-    backgroundColor: scheme === 'dark' ? '#2a2c2eff' : '#b6b6b0ff',
-  }
+  Item: {
+    backgroundColor: scheme === "dark" ? "#2a2c2eff" : "#b6b6b0ff",
+  },
 });
 
 const theme = getTheme();

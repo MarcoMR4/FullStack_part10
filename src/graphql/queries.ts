@@ -64,6 +64,22 @@ export const GET_REPOSITORY_DETAILS = gql`
       ratingAverage
       reviewCount
       stargazersCount
+      reviews {
+        edges {
+          node {
+            id
+            rating
+            user {
+              id
+              username
+            }
+            text
+            userId
+            repositoryId
+            createdAt
+          }
+        }
+      }
     }
   }
 `;
