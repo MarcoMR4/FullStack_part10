@@ -1,10 +1,12 @@
 import Text from "@/src/components/Text";
+import AuthStorageContext from "@/src/context/AuthStorageContext";
 import { useThemeScheme } from "@/src/context/ThemeContext";
 import { GET_REPOSITORY_DETAILS } from "@/src/graphql/queries";
 import { getTheme } from "@/src/theme";
 import { overThousandFormatter } from "@/src/utils/quantitiesFormatters";
 import { useQuery } from "@apollo/client/react";
-import React from "react";
+import { useRouter } from "expo-router";
+import React, { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Button,
@@ -12,6 +14,7 @@ import {
   Linking,
   ScrollView,
   StyleSheet,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import RepositoryReviews from "./RepositoryReviews";
@@ -57,6 +60,23 @@ const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({
   const { data, loading, error } = useQuery(GET_REPOSITORY_DETAILS, {
     variables: { repositoryId: id },
   });
+  const authStorage = useContext(AuthStorageContext);
+  const [hasToken, setHasToken] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    let mounted = true;
+    const checkToken = async () => {
+      if (authStorage) {
+        const token = await authStorage.getAccessToken();
+        if (mounted) setHasToken(!!token);
+      }
+    };
+    checkToken();
+    return () => {
+      mounted = false;
+    };
+  }, [authStorage]);
 
   if (loading) {
     return (
@@ -151,6 +171,40 @@ const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({
           onPress={() => Linking.openURL(repo.url)}
           color={theme.colors.primary}
         />
+        {/* Botón para crear review solo si autenticado */}
+        {hasToken && (
+          <TouchableWithoutFeedback
+            onPress={() =>
+              router.push({
+                pathname: "/create-review",
+                params: {
+                  repositoryName: repo.name,
+                  ownerName: repo.ownerName,
+                },
+              })
+            }
+          >
+            <View
+              style={{
+                backgroundColor: theme.colors.primary,
+                borderRadius: 4,
+                alignItems: "center",
+                paddingVertical: 12,
+                marginTop: 16,
+              }}
+            >
+              <Text
+                style={{
+                  color: theme.colors.textPrimary,
+                  fontWeight: "bold",
+                  fontSize: 16,
+                }}
+              >
+                Create review
+              </Text>
+            </View>
+          </TouchableWithoutFeedback>
+        )}
         {repo.reviews?.edges?.length > 0 && (
           <View style={{ marginTop: 24 }}>
             <Text
@@ -177,6 +231,18 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flexGrow: 1,
+  },
+  button: {
+    backgroundColor: "#0366d6",
+    borderRadius: 4,
+    alignItems: "center",
+    paddingVertical: 12,
+    marginTop: 12,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
 

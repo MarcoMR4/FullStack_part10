@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client/react";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { View } from "react-native";
 import { GET_REPOSITORIES } from "../../graphql/queries";
@@ -13,18 +14,25 @@ interface GetRepositoriesData {
 }
 
 const RepositoryList = () => {
-  const { data, loading, error }: any =
+  const { data, loading, error, refetch }: any =
     useQuery<GetRepositoriesData>(GET_REPOSITORIES);
+  const params = useLocalSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
     if (error) {
       // Puedes castear error como ApolloError si necesitas acceder a networkError/graphQLErrors
-      // const apolloError = error as ApolloError;
-      // console.log("networkError:", apolloError.networkError);
-      // console.log("graphQLErrors:", apolloError.graphQLErrors);
       console.log("GET_REPOSITORIES error:", JSON.stringify(error, null, 2));
     }
   }, [error]);
+
+  // Refetch solo si el parámetro refetch está presente
+  useEffect(() => {
+    if (params?.refetch === "1") {
+      refetch?.();
+      router.replace("/");
+    }
+  }, [params?.refetch, refetch, router]);
 
   const repositories = data?.repositories ?? { edges: [] };
 
