@@ -4,16 +4,15 @@ import { GET_REPOSITORY_DETAILS } from "@/src/graphql/queries";
 import { getTheme } from "@/src/theme";
 import { overThousandFormatter } from "@/src/utils/quantitiesFormatters";
 import { useQuery } from "@apollo/client/react";
-import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import {
-    ActivityIndicator,
-    Button,
-    Image,
-    Linking,
-    ScrollView,
-    StyleSheet,
-    View,
+  ActivityIndicator,
+  Button,
+  Image,
+  Linking,
+  ScrollView,
+  StyleSheet,
+  View,
 } from "react-native";
 import RepositoryReviews from "./RepositoryReviews";
 
@@ -49,9 +48,7 @@ interface RepositoryDetailsProps {
 const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({
   repositoryId,
 }) => {
-  const params = useLocalSearchParams();
-
-  const id = repositoryId || params.repositoryId;
+  const id = repositoryId;
 
   const { themeScheme } = useThemeScheme();
 
