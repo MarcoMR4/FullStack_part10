@@ -14,7 +14,10 @@ const ReviewItem = ({ review }: { review: any }) => {
         <View
           style={[
             styles.circle,
-            { borderColor: currentTheme.colors.textSecondary },
+            {
+              borderColor: currentTheme.colors.textSecondary,
+              borderRadius: styles.circle.width / 2,
+            },
           ]}
         >
           <RNText
@@ -84,9 +87,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   circle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
     borderWidth: 2,
     justifyContent: "center",
     alignItems: "center",
