@@ -1,9 +1,14 @@
 import { gql } from "@apollo/client";
 
 // Ejemplo de consulta tipada en TypeScript
+
+// Query parametrizable para obtener repositorios con diferentes órdenes
 export const GET_REPOSITORIES = gql`
-  query {
-    repositories {
+  query Repositories(
+    $orderBy: AllRepositoriesOrderBy
+    $orderDirection: OrderDirection
+  ) {
+    repositories(orderBy: $orderBy, orderDirection: $orderDirection) {
       edges {
         node {
           id
@@ -15,6 +20,7 @@ export const GET_REPOSITORIES = gql`
           reviewCount
           ratingAverage
           ownerAvatarUrl
+          createdAt
           reviews {
             edges {
               node {
@@ -40,19 +46,7 @@ export const GET_REPOSITORIES = gql`
   }
 `;
 
-export const GET_RATING_AVERAGE_SORTED_REPOSITORIES = gql`
-  query {
-    repositories(orderBy: RATING_AVERAGE, orderDirection: DESC) {
-      edges {
-        node {
-          id
-          fullName
-          ratingAverage
-        }
-      }
-    }
-  }
-`;
+// Ya no es necesario GET_RATING_AVERAGE_SORTED_REPOSITORIES, se usa GET_REPOSITORIES con parámetros
 
 export const GET_ME = gql`
   query {
