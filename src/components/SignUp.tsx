@@ -112,11 +112,10 @@ const SignUp: React.FC = () => {
           router.replace("/");
         }
       }
-      setSubmitting(false);
     } catch (e: any) {
-      setSubmitting(false);
       setErrorMsg(e.message || "Could not sign up");
     }
+    setSubmitting(false);
   };
 
   return (
