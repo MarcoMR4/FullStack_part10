@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import {
-  Button,
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { Repository, RepositoryEdge } from "../../types/respository";
-import RepositoryDetails from "./RepositoryDetails";
 import RepositoryItem from "./RepositoryItem";
 
 const styles = StyleSheet.create({
@@ -28,23 +26,15 @@ interface RepositoryListContainerProps {
   repositories: {
     edges: RepositoryEdge[];
   };
+  onSelectRepository?: (id: string) => void;
 }
 
 const RepositoryListContainer: React.FC<RepositoryListContainerProps> = ({
   repositories,
+  onSelectRepository,
 }) => {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
   const repositoryNodes: Repository[] =
     repositories?.edges?.map((edge) => edge.node) ?? [];
-
-  if (selectedId) {
-    return (
-      <View style={{ flex: 1 }}>
-        <Button title="Return to List" onPress={() => setSelectedId(null)} />
-        <RepositoryDetails repositoryId={selectedId} />
-      </View>
-    );
-  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -52,7 +42,7 @@ const RepositoryListContainer: React.FC<RepositoryListContainerProps> = ({
         data={repositoryNodes}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => setSelectedId(item.id)}
+            onPress={() => onSelectRepository?.(item.id)}
             activeOpacity={0.7}
           >
             <RepositoryItem item={item} />

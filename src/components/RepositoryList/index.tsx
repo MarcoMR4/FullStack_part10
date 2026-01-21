@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client/react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { GET_REPOSITORIES } from "../../graphql/queries";
 import { FilterToQuery } from "../../types/repositoryListFilters";
 import { RepositoryEdge } from "../../types/respository";
@@ -9,6 +9,10 @@ import Text from "../Text";
 import RepositoryListContainer from "./RepositoryListContainer";
 import RepositoryListFilter from "./RepositoryListFilter";
 import SearchKeywordFilter from "./SearchKeywordFilter";
+
+import { useThemeScheme } from "../../context/ThemeContext";
+import { getTheme } from "../../theme";
+import RepositoryDetails from "./RepositoryDetails";
 
 interface GetRepositoriesData {
   repositories: {
@@ -25,8 +29,11 @@ const FILTER_TO_QUERY: FilterToQuery = {
 const RepositoryList = () => {
   const [filter, setFilter] = useState<keyof FilterToQuery>("latest");
   const [keyword, setKeyword] = useState<string>("");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const params = useLocalSearchParams();
   const router = useRouter();
+  const { themeScheme } = useThemeScheme();
+  const theme = getTheme(themeScheme);
 
   const repositoryQueryVars =
     filter && FILTER_TO_QUERY[filter as keyof FilterToQuery]
@@ -85,8 +92,36 @@ const RepositoryList = () => {
     );
   }
 
+  if (selectedId) {
+    return (
+      <View
+        style={{
+          padding: 16,
+          backgroundColor: theme.colors.background,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => setSelectedId(null)}
+          style={{
+            padding: 10,
+            backgroundColor: theme.colors.primary,
+            borderRadius: 10,
+            marginBottom: 10,
+            alignItems: "center",
+          }}
+          activeOpacity={0.8}
+        >
+          <Text style={{ color: "white" }}>Return to List</Text>
+        </TouchableOpacity>
+        <RepositoryDetails repositoryId={selectedId} />
+      </View>
+    );
+  }
+
   return (
-    <View style={{ flex: 1, padding: 1 }}>
+    <View
+      style={{ flex: 1, padding: 1, backgroundColor: theme.colors.background }}
+    >
       <View style={{ marginBottom: 10 }}>
         <SearchKeywordFilter keyword={keyword} onKeywordChange={setKeyword} />
       </View>
@@ -94,7 +129,10 @@ const RepositoryList = () => {
         <RepositoryListFilter filter={filter} onFilterChange={setFilter} />
       </View>
       <View style={{ flex: 1 }}>
-        <RepositoryListContainer repositories={repositories} />
+        <RepositoryListContainer
+          repositories={repositories}
+          onSelectRepository={setSelectedId}
+        />
       </View>
     </View>
   );
