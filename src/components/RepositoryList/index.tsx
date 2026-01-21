@@ -1,71 +1,29 @@
-import { useQuery } from "@apollo/client/react";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { TouchableOpacity, View } from "react-native";
-import { GET_REPOSITORIES } from "../../graphql/queries";
-import { FilterToQuery } from "../../types/repositoryListFilters";
-import { RepositoryEdge } from "../../types/respository";
+import { useThemeScheme } from "../../context/ThemeContext";
+import useRepositories from "../../hooks/useRepositories";
+import { getTheme } from "../../theme";
 import Text from "../Text";
+import RepositoryDetails from "./RepositoryDetails";
 import RepositoryListContainer from "./RepositoryListContainer";
 import RepositoryListFilter from "./RepositoryListFilter";
 import SearchKeywordFilter from "./SearchKeywordFilter";
 
-import { useThemeScheme } from "../../context/ThemeContext";
-import { getTheme } from "../../theme";
-import RepositoryDetails from "./RepositoryDetails";
-
-interface GetRepositoriesData {
-  repositories: {
-    edges: RepositoryEdge[];
-  };
-}
-
-const FILTER_TO_QUERY: FilterToQuery = {
-  latest: { orderBy: "CREATED_AT", orderDirection: "DESC" },
-  highest: { orderBy: "RATING_AVERAGE", orderDirection: "DESC" },
-  lowest: { orderBy: "RATING_AVERAGE", orderDirection: "ASC" },
-};
-
 const RepositoryList = () => {
-  const [filter, setFilter] = useState<keyof FilterToQuery>("latest");
-  const [keyword, setKeyword] = useState<string>("");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const params = useLocalSearchParams();
-  const router = useRouter();
+  const {
+    repositories,
+    loading,
+    error,
+    filter,
+    setFilter,
+    keyword,
+    setKeyword,
+    selectedId,
+    setSelectedId,
+  } = useRepositories();
+
   const { themeScheme } = useThemeScheme();
   const theme = getTheme(themeScheme);
-
-  const repositoryQueryVars =
-    filter && FILTER_TO_QUERY[filter as keyof FilterToQuery]
-      ? {
-          orderBy: FILTER_TO_QUERY[filter as keyof FilterToQuery].orderBy,
-          orderDirection:
-            FILTER_TO_QUERY[filter as keyof FilterToQuery].orderDirection,
-          searchKeyword: keyword.trim() !== "" ? keyword : "",
-        }
-      : {};
-
-  const { data, loading, error, refetch }: any = useQuery<GetRepositoriesData>(
-    GET_REPOSITORIES,
-    {
-      variables: repositoryQueryVars,
-    },
-  );
-
-  useEffect(() => {
-    if (error) {
-      console.error("GET_REPOSITORIES error:", JSON.stringify(error, null, 2));
-    }
-  }, [error]);
-
-  useEffect(() => {
-    if (params?.refetch === "1") {
-      refetch?.();
-      router.replace("/");
-    }
-  }, [params?.refetch, refetch, router]);
-
-  const repositories = data?.repositories ?? { edges: [] };
 
   if (loading)
     return (
@@ -79,13 +37,15 @@ const RepositoryList = () => {
       <View style={{ padding: 10 }}>
         <Text>Error loading repositories</Text>
         <Text>{error.message}</Text>
-        {error.networkError ? (
-          <Text>NetworkError: {String(error.networkError)}</Text>
+        {(error as any).networkError ? (
+          <Text>NetworkError: {String((error as any).networkError)}</Text>
         ) : null}
-        {error.graphQLErrors?.length ? (
+        {(error as any).graphQLErrors?.length ? (
           <Text>
             GraphQLErrors:{" "}
-            {error.graphQLErrors.map((e: any) => e.message).join(" | ")}
+            {(error as any).graphQLErrors
+              .map((e: any) => e.message)
+              .join(" | ")}
           </Text>
         ) : null}
       </View>
