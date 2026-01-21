@@ -94,11 +94,7 @@ const RepositoryList = () => {
         <RepositoryListFilter filter={filter} onFilterChange={setFilter} />
       </View>
       <View style={{ flex: 1 }}>
-        <RepositoryListContainer
-          repositories={repositories}
-          filter={filter}
-          onFilterChange={setFilter}
-        />
+        <RepositoryListContainer repositories={repositories} />
       </View>
     </View>
   );

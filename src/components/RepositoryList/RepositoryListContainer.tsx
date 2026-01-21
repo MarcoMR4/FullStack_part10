@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { FilterToQuery } from "../../types/repositoryListFilters";
 import { Repository, RepositoryEdge } from "../../types/respository";
 import RepositoryDetails from "./RepositoryDetails";
 import RepositoryItem from "./RepositoryItem";
@@ -29,14 +28,10 @@ interface RepositoryListContainerProps {
   repositories: {
     edges: RepositoryEdge[];
   };
-  filter: keyof FilterToQuery;
-  onFilterChange: (value: keyof FilterToQuery) => void;
 }
 
 const RepositoryListContainer: React.FC<RepositoryListContainerProps> = ({
   repositories,
-  filter,
-  onFilterChange,
 }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const repositoryNodes: Repository[] =
