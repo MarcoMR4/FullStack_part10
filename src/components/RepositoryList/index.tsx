@@ -36,7 +36,7 @@ const RepositoryList = () => {
             FILTER_TO_QUERY[filter as keyof FilterToQuery].orderDirection,
           searchKeyword: keyword.trim() !== "" ? keyword : "",
         }
-      : { searchKeyword: keyword.trim() !== "" ? keyword : "" };
+      : {};
 
   const { data, loading, error, refetch }: any = useQuery<GetRepositoriesData>(
     GET_REPOSITORIES,
