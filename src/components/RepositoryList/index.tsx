@@ -7,6 +7,8 @@ import { FilterToQuery } from "../../types/repositoryListFilters";
 import { RepositoryEdge } from "../../types/respository";
 import Text from "../Text";
 import RepositoryListContainer from "./RepositoryListContainer";
+import RepositoryListFilter from "./RepositoryListFilter";
+import SearchKeywordFilter from "./SearchKeywordFilter";
 
 interface GetRepositoriesData {
   repositories: {
@@ -22,6 +24,7 @@ const FILTER_TO_QUERY: FilterToQuery = {
 
 const RepositoryList = () => {
   const [filter, setFilter] = useState<keyof FilterToQuery>("latest");
+  const [keyword, setKeyword] = useState<string>("");
   const params = useLocalSearchParams();
   const router = useRouter();
 
@@ -31,8 +34,9 @@ const RepositoryList = () => {
           orderBy: FILTER_TO_QUERY[filter as keyof FilterToQuery].orderBy,
           orderDirection:
             FILTER_TO_QUERY[filter as keyof FilterToQuery].orderDirection,
+          searchKeyword: keyword.trim() !== "" ? keyword : "",
         }
-      : {};
+      : { searchKeyword: keyword.trim() !== "" ? keyword : "" };
 
   const { data, loading, error, refetch }: any = useQuery<GetRepositoriesData>(
     GET_REPOSITORIES,
@@ -82,11 +86,21 @@ const RepositoryList = () => {
   }
 
   return (
-    <RepositoryListContainer
-      repositories={repositories}
-      filter={filter}
-      onFilterChange={setFilter}
-    />
+    <View style={{ flex: 1, padding: 1 }}>
+      <View style={{ marginBottom: 10 }}>
+        <SearchKeywordFilter keyword={keyword} onKeywordChange={setKeyword} />
+      </View>
+      <View style={{ marginBottom: 10 }}>
+        <RepositoryListFilter filter={filter} onFilterChange={setFilter} />
+      </View>
+      <View style={{ flex: 1 }}>
+        <RepositoryListContainer
+          repositories={repositories}
+          filter={filter}
+          onFilterChange={setFilter}
+        />
+      </View>
+    </View>
   );
 };
 

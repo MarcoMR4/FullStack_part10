@@ -10,7 +10,6 @@ import { FilterToQuery } from "../../types/repositoryListFilters";
 import { Repository, RepositoryEdge } from "../../types/respository";
 import RepositoryDetails from "./RepositoryDetails";
 import RepositoryItem from "./RepositoryItem";
-import RepositoryListFilter from "./RepositoryListFilter";
 
 const styles = StyleSheet.create({
   separator: {
@@ -54,9 +53,6 @@ const RepositoryListContainer: React.FC<RepositoryListContainerProps> = ({
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.pickerContainer}>
-        <RepositoryListFilter filter={filter} onFilterChange={onFilterChange} />
-      </View>
       <FlatList
         data={repositoryNodes}
         renderItem={({ item }) => (
