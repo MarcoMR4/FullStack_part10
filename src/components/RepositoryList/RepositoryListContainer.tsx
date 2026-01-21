@@ -6,16 +6,21 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { FilterToQuery } from "../../types/repositoryListFilters";
 import { Repository, RepositoryEdge } from "../../types/respository";
 import RepositoryDetails from "./RepositoryDetails";
 import RepositoryItem from "./RepositoryItem";
+import RepositoryListFilter from "./RepositoryListFilter";
 
 const styles = StyleSheet.create({
   separator: {
-    height: 20,
+    height: 15,
   },
   container: {
     padding: 10,
+  },
+  pickerContainer: {
+    marginBottom: 5,
   },
 });
 
@@ -25,10 +30,14 @@ interface RepositoryListContainerProps {
   repositories: {
     edges: RepositoryEdge[];
   };
+  filter: keyof FilterToQuery;
+  onFilterChange: (value: keyof FilterToQuery) => void;
 }
 
 const RepositoryListContainer: React.FC<RepositoryListContainerProps> = ({
   repositories,
+  filter,
+  onFilterChange,
 }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const repositoryNodes: Repository[] =
@@ -44,20 +53,25 @@ const RepositoryListContainer: React.FC<RepositoryListContainerProps> = ({
   }
 
   return (
-    <FlatList
-      data={repositoryNodes}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          onPress={() => setSelectedId(item.id)}
-          activeOpacity={0.7}
-        >
-          <RepositoryItem item={item} />
-        </TouchableOpacity>
-      )}
-      keyExtractor={(item) => item.id}
-      ItemSeparatorComponent={ItemSeparator}
-      style={styles.container}
-    />
+    <View style={{ flex: 1 }}>
+      <View style={styles.pickerContainer}>
+        <RepositoryListFilter filter={filter} onFilterChange={onFilterChange} />
+      </View>
+      <FlatList
+        data={repositoryNodes}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => setSelectedId(item.id)}
+            activeOpacity={0.7}
+          >
+            <RepositoryItem item={item} />
+          </TouchableOpacity>
+        )}
+        keyExtractor={(item) => item.id}
+        ItemSeparatorComponent={ItemSeparator}
+        style={styles.container}
+      />
+    </View>
   );
 };
 

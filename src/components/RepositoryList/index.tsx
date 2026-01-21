@@ -1,8 +1,9 @@
 import { useQuery } from "@apollo/client/react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { GET_REPOSITORIES } from "../../graphql/queries";
+import { FilterToQuery } from "../../types/repositoryListFilters";
 import { RepositoryEdge } from "../../types/respository";
 import Text from "../Text";
 import RepositoryListContainer from "./RepositoryListContainer";
@@ -13,20 +14,39 @@ interface GetRepositoriesData {
   };
 }
 
+const FILTER_TO_QUERY: FilterToQuery = {
+  latest: { orderBy: "CREATED_AT", orderDirection: "DESC" },
+  highest: { orderBy: "RATING_AVERAGE", orderDirection: "DESC" },
+  lowest: { orderBy: "RATING_AVERAGE", orderDirection: "ASC" },
+};
+
 const RepositoryList = () => {
-  const { data, loading, error, refetch }: any =
-    useQuery<GetRepositoriesData>(GET_REPOSITORIES);
+  const [filter, setFilter] = useState<keyof FilterToQuery>("latest");
   const params = useLocalSearchParams();
   const router = useRouter();
 
+  const repositoryQueryVars =
+    filter && FILTER_TO_QUERY[filter as keyof FilterToQuery]
+      ? {
+          orderBy: FILTER_TO_QUERY[filter as keyof FilterToQuery].orderBy,
+          orderDirection:
+            FILTER_TO_QUERY[filter as keyof FilterToQuery].orderDirection,
+        }
+      : {};
+
+  const { data, loading, error, refetch }: any = useQuery<GetRepositoriesData>(
+    GET_REPOSITORIES,
+    {
+      variables: repositoryQueryVars,
+    },
+  );
+
   useEffect(() => {
     if (error) {
-      // Puedes castear error como ApolloError si necesitas acceder a networkError/graphQLErrors
-      console.log("GET_REPOSITORIES error:", JSON.stringify(error, null, 2));
+      console.error("GET_REPOSITORIES error:", JSON.stringify(error, null, 2));
     }
   }, [error]);
 
-  // Refetch solo si el parámetro refetch está presente
   useEffect(() => {
     if (params?.refetch === "1") {
       refetch?.();
@@ -61,7 +81,13 @@ const RepositoryList = () => {
     );
   }
 
-  return <RepositoryListContainer repositories={repositories} />;
+  return (
+    <RepositoryListContainer
+      repositories={repositories}
+      filter={filter}
+      onFilterChange={setFilter}
+    />
+  );
 };
 
 export default RepositoryList;
