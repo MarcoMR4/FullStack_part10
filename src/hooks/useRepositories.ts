@@ -8,6 +8,10 @@ import { RepositoryEdge } from "../types/respository";
 interface GetRepositoriesData {
   repositories: {
     edges: RepositoryEdge[];
+    pageInfo: {
+      endCursor: string | null;
+      hasNextPage: boolean;
+    };
   };
 }
 
@@ -17,29 +21,54 @@ const FILTER_TO_QUERY: FilterToQuery = {
   lowest: { orderBy: "RATING_AVERAGE", orderDirection: "ASC" },
 };
 
+const PAGE_SIZE = 5;
+
 export default function useRepositories() {
   const [filter, setFilter] = useState<keyof FilterToQuery>("latest");
   const [keyword, setKeyword] = useState<string>("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [after, setAfter] = useState<string | null>(null);
+  const [repositoriesList, setRepositoriesList] = useState<RepositoryEdge[]>(
+    [],
+  );
+  const [hasNextPage, setHasNextPage] = useState<boolean>(false);
   const params = useLocalSearchParams();
   const router = useRouter();
 
-  const repositoryQueryVars =
-    filter && FILTER_TO_QUERY[filter as keyof FilterToQuery]
-      ? {
-          orderBy: FILTER_TO_QUERY[filter as keyof FilterToQuery].orderBy,
-          orderDirection:
-            FILTER_TO_QUERY[filter as keyof FilterToQuery].orderDirection,
-          searchKeyword: keyword.trim() !== "" ? keyword : "",
-        }
-      : {};
+  // Variables para la query
+  const repositoryQueryVars = {
+    orderBy: FILTER_TO_QUERY[filter].orderBy,
+    orderDirection: FILTER_TO_QUERY[filter].orderDirection,
+    searchKeyword: keyword.trim() !== "" ? keyword : "",
+    first: PAGE_SIZE,
+    after,
+  };
 
-  const { data, loading, error, refetch } = useQuery<GetRepositoriesData>(
-    GET_REPOSITORIES,
-    {
+  const { data, loading, error, refetch, fetchMore } =
+    useQuery<GetRepositoriesData>(GET_REPOSITORIES, {
       variables: repositoryQueryVars,
-    },
-  );
+      notifyOnNetworkStatusChange: true,
+    });
+
+  useEffect(() => {
+    setAfter(null);
+    setRepositoriesList([]);
+  }, [filter, keyword]);
+
+  useEffect(() => {
+    if (data?.repositories) {
+      const newEdges = data.repositories.edges || [];
+      setRepositoriesList((prev) => {
+        if (!after) return newEdges;
+        const prevIds = new Set(prev.map((e) => e.node.id));
+        const filteredNewEdges = newEdges.filter(
+          (e) => !prevIds.has(e.node.id),
+        );
+        return [...prev, ...filteredNewEdges];
+      });
+      setHasNextPage(data.repositories.pageInfo.hasNextPage);
+    }
+  }, [data, after]);
 
   useEffect(() => {
     if (error) {
@@ -54,10 +83,25 @@ export default function useRepositories() {
     }
   }, [params?.refetch, refetch, router]);
 
-  const repositories = data?.repositories ?? { edges: [] };
+  const fetchNextPage = async () => {
+    if (!hasNextPage || loading) return;
+    const nextCursor = data?.repositories?.pageInfo?.endCursor;
+    if (!nextCursor) return;
+    await fetchMore({
+      variables: {
+        ...repositoryQueryVars,
+        after: nextCursor,
+      },
+      updateQuery: (prevResult, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prevResult;
+        return fetchMoreResult;
+      },
+    });
+    setAfter(nextCursor);
+  };
 
   return {
-    repositories,
+    repositories: { edges: repositoriesList },
     loading,
     error,
     filter,
@@ -67,5 +111,7 @@ export default function useRepositories() {
     selectedId,
     setSelectedId,
     refetch,
+    fetchNextPage,
+    hasNextPage,
   };
 }

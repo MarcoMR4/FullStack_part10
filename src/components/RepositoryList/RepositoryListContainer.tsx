@@ -27,11 +27,15 @@ interface RepositoryListContainerProps {
     edges: RepositoryEdge[];
   };
   onSelectRepository?: (id: string) => void;
+  onEndReached?: () => void;
+  loading?: boolean;
 }
 
 const RepositoryListContainer: React.FC<RepositoryListContainerProps> = ({
   repositories,
   onSelectRepository,
+  onEndReached,
+  loading,
 }) => {
   const repositoryNodes: Repository[] =
     repositories?.edges?.map((edge) => edge.node) ?? [];
@@ -51,6 +55,12 @@ const RepositoryListContainer: React.FC<RepositoryListContainerProps> = ({
         keyExtractor={(item) => item.id}
         ItemSeparatorComponent={ItemSeparator}
         style={styles.container}
+        onEndReachedThreshold={0.5}
+        onEndReached={() => {
+          if (!loading) {
+            onEndReached?.();
+          }
+        }}
       />
     </View>
   );

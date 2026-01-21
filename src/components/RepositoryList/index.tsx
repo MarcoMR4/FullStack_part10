@@ -20,6 +20,8 @@ const RepositoryList = () => {
     setKeyword,
     selectedId,
     setSelectedId,
+    fetchNextPage,
+    hasNextPage,
   } = useRepositories();
 
   const { themeScheme } = useThemeScheme();
@@ -92,6 +94,10 @@ const RepositoryList = () => {
         <RepositoryListContainer
           repositories={repositories}
           onSelectRepository={setSelectedId}
+          onEndReached={() => {
+            if (hasNextPage && !loading) fetchNextPage();
+          }}
+          loading={loading}
         />
       </View>
     </View>
