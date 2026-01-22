@@ -51,13 +51,34 @@ export const GET_REPOSITORIES = gql`
   }
 `;
 
-// Ya no es necesario GET_RATING_AVERAGE_SORTED_REPOSITORIES, se usa GET_REPOSITORIES con parámetros
-
 export const GET_ME = gql`
-  query {
+  query getMe($reviews: Boolean!, $first: Int, $after: String) {
     me {
       id
       username
+      reviewCount
+      reviews(first: $first, after: $after) @include(if: $reviews) {
+        edges {
+          cursor
+          node {
+            createdAt
+            id
+            rating
+            repository {
+              name
+              id
+              url
+            }
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+          hasPreviousPage
+          startCursor
+        }
+        totalCount
+      }
     }
   }
 `;
