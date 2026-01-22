@@ -50,13 +50,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="myReviews"
+        name="reviews"
         options={{
-          title: "My Reviews",
+          title: "My reviews",
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="person" color={color} />
           ),
-          href: isAuthenticated ? null : "/reviews",
+          href: isAuthenticated ? "/reviews" : null,
         }}
       />
       <Tabs.Screen
