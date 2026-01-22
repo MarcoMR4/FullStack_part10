@@ -68,7 +68,7 @@ export default function useRepositories() {
     const edges = (detailsData as any)?.repository?.reviews?.edges || [];
     if (edges.length > 0) {
       setReviewsList((prev) => {
-        if (!reviewsAfter) return edges;
+        if (!reviewsAfter) return edges.map((e: any) => e.node);
         const prevIds = new Set(prev.map((e) => e.id));
         const filteredNew = edges
           .map((e: any) => e.node)
