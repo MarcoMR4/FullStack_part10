@@ -57,7 +57,7 @@ export default function useRepositories() {
     skip: !selectedId,
     notifyOnNetworkStatusChange: true,
   });
-  // Reset reviews pagination when repository changes
+
   useEffect(() => {
     setReviewsAfter(null);
     setReviewsList([]);
