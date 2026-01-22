@@ -35,16 +35,71 @@ export default function useRepositories() {
   const params = useLocalSearchParams();
   const router = useRouter();
 
-  // SELECTED REPOSITORY DETAILS QUERY
+  // PAGINATED REVIEWS STATE
+  const REVIEWS_PAGE_SIZE = 2;
+  const [reviewsAfter, setReviewsAfter] = useState<string | null>(null);
+  const [reviewsList, setReviewsList] = useState<any[]>([]);
+  const [reviewsHasNextPage, setReviewsHasNextPage] = useState<boolean>(false);
+
+  // SELECTED REPOSITORY DETAILS QUERY (with paginated reviews)
   const {
     data: detailsData,
     loading: detailsLoading,
     error: detailsError,
     refetch: refetchDetails,
+    fetchMore: fetchMoreReviews,
   } = useQuery(GET_REPOSITORY_DETAILS, {
-    variables: { repositoryId: selectedId },
+    variables: {
+      repositoryId: selectedId,
+      first: REVIEWS_PAGE_SIZE,
+      after: reviewsAfter === null ? undefined : reviewsAfter,
+    },
     skip: !selectedId,
+    notifyOnNetworkStatusChange: true,
   });
+  // Reset reviews pagination when repository changes
+  useEffect(() => {
+    setReviewsAfter(null);
+    setReviewsList([]);
+  }, [selectedId]);
+
+  // Accumulate reviews as pages are loaded
+  useEffect(() => {
+    const edges = (detailsData as any)?.repository?.reviews?.edges || [];
+    if (edges.length > 0) {
+      setReviewsList((prev) => {
+        if (!reviewsAfter) return edges;
+        const prevIds = new Set(prev.map((e) => e.id));
+        const filteredNew = edges
+          .map((e: any) => e.node)
+          .filter((e: any) => !prevIds.has(e.id));
+        return [...prev, ...filteredNew];
+      });
+      setReviewsHasNextPage(
+        (detailsData as any).repository.reviews.pageInfo.hasNextPage,
+      );
+    }
+  }, [detailsData, reviewsAfter]);
+
+  // Fetch next page of reviews
+  const fetchNextReviewsPage = async () => {
+    if (!reviewsHasNextPage || detailsLoading) return;
+    const nextCursor = (detailsData as any)?.repository?.reviews?.pageInfo
+      ?.endCursor;
+    if (!nextCursor) return;
+    await fetchMoreReviews({
+      variables: {
+        repositoryId: selectedId,
+        first: REVIEWS_PAGE_SIZE,
+        after: nextCursor,
+      },
+      updateQuery: (prevResult: any, { fetchMoreResult }: any) => {
+        if (!fetchMoreResult) return prevResult;
+        return fetchMoreResult;
+      },
+    });
+    setReviewsAfter(nextCursor);
+  };
 
   const repositoryQueryVars = {
     orderBy: FILTER_TO_QUERY[filter].orderBy,
@@ -128,5 +183,9 @@ export default function useRepositories() {
     detailsLoading,
     detailsError,
     refetchDetails,
+    // Paginated reviews
+    reviewsList,
+    reviewsHasNextPage,
+    fetchNextReviewsPage,
   };
 }

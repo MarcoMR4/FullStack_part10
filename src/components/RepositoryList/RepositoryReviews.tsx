@@ -3,7 +3,7 @@ import { useThemeScheme } from "@/src/context/ThemeContext";
 import { getTheme } from "@/src/theme";
 import formatDate from "@/src/utils/dateFormats";
 import React from "react";
-import { Text as RNText, StyleSheet, View } from "react-native";
+import { Text as RNText, StyleSheet, View, FlatList, ActivityIndicator } from "react-native";
 
 const ReviewItem = ({ review }: { review: any }) => {
   const { themeScheme } = useThemeScheme();
@@ -50,26 +50,36 @@ const ReviewItem = ({ review }: { review: any }) => {
   );
 };
 
-const RepositoryReviews = ({ reviews }: { reviews: any[] }) => {
+interface RepositoryReviewsProps {
+  reviews: any[];
+  onEndReached?: () => void;
+  hasNextPage?: boolean;
+  loading?: boolean;
+}
+
+const RepositoryReviews: React.FC<RepositoryReviewsProps> = ({ reviews, onEndReached, hasNextPage, loading }) => {
   const { themeScheme } = useThemeScheme();
   const currentTheme = getTheme(themeScheme);
   if (!reviews?.length) return null;
   return (
-    <View style={styles.listContainer}>
-      {reviews.map((review, idx) => (
-        <React.Fragment key={review.id}>
-          <ReviewItem review={review} />
-          {idx < reviews.length - 1 && (
-            <View
-              style={[
-                styles.separator,
-                { backgroundColor: currentTheme.colors.textSecondary },
-              ]}
-            />
-          )}
-        </React.Fragment>
-      ))}
-    </View>
+    <FlatList
+      data={reviews}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => <ReviewItem review={item} />}
+      ItemSeparatorComponent={() => (
+        <View style={[styles.separator, { backgroundColor: currentTheme.colors.textSecondary }]} />
+      )}
+      contentContainerStyle={styles.listContainer}
+      onEndReached={() => {
+        if (hasNextPage && !loading && onEndReached) onEndReached();
+      }}
+      onEndReachedThreshold={0.2}
+      ListFooterComponent={
+        loading && hasNextPage ? (
+          <ActivityIndicator style={{ marginVertical: 16 }} color={currentTheme.colors.primary} />
+        ) : null
+      }
+    />
   );
 };
 

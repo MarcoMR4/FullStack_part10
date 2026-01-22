@@ -7,6 +7,7 @@ import Text from "../Text";
 import RepositoryDetails from "./RepositoryDetails";
 import RepositoryListContainer from "./RepositoryListContainer";
 import RepositoryListFilter from "./RepositoryListFilter";
+import RepositoryReviews from "./RepositoryReviews";
 import SearchKeywordFilter from "./SearchKeywordFilter";
 
 const RepositoryList = () => {
@@ -22,6 +23,10 @@ const RepositoryList = () => {
     setSelectedId,
     fetchNextPage,
     hasNextPage,
+    reviewsList,
+    reviewsHasNextPage,
+    fetchNextReviewsPage,
+    detailsLoading,
   } = useRepositories();
 
   const { themeScheme } = useThemeScheme();
@@ -58,7 +63,7 @@ const RepositoryList = () => {
     return (
       <View
         style={{
-          padding: 16,
+          flex: 1,
           backgroundColor: theme.colors.background,
         }}
       >
@@ -68,7 +73,7 @@ const RepositoryList = () => {
             padding: 10,
             backgroundColor: theme.colors.primary,
             borderRadius: 10,
-            marginBottom: 10,
+            margin: 16,
             alignItems: "center",
           }}
           activeOpacity={0.8}
@@ -76,6 +81,16 @@ const RepositoryList = () => {
           <Text style={{ color: "white" }}>Return to List</Text>
         </TouchableOpacity>
         <RepositoryDetails repositoryId={selectedId} />
+        {reviewsList.length > 0 && (
+          <View key={`reviews-${selectedId}`} style={{ flex: 1 }}>
+            <RepositoryReviews
+              reviews={reviewsList}
+              onEndReached={fetchNextReviewsPage}
+              hasNextPage={reviewsHasNextPage}
+              loading={detailsLoading}
+            />
+          </View>
+        )}
       </View>
     );
   }

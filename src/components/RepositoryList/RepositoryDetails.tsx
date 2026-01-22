@@ -10,13 +10,10 @@ import {
   Button,
   Image,
   Linking,
-  ScrollView,
-  StyleSheet,
   TouchableWithoutFeedback,
-  View,
+  View
 } from "react-native";
 import useRepositories from "../../hooks/useRepositories";
-import RepositoryReviews from "./RepositoryReviews";
 
 // Componente para mostrar cada estadística
 const StatsItem = ({
@@ -85,6 +82,7 @@ const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({
     );
   }
   if (detailsError) {
+    console.error("Error loading repository details:", detailsError);
     return (
       <Text style={{ color: theme.colors.error, margin: 20 }}>
         Error loading repository details
@@ -95,152 +93,109 @@ const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({
   if (!repo) return null;
 
   return (
-    <ScrollView
-      contentContainerStyle={[
-        styles.container,
-        { backgroundColor: theme.colors.background },
-      ]}
+    <View
+      style={{
+        backgroundColor: theme.colors.background,
+        padding: 16,
+        borderRadius: 8,
+      }}
     >
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Image
+          source={{ uri: repo.ownerAvatarUrl }}
+          style={{
+            width: 64,
+            height: 64,
+            borderRadius: 32,
+            marginRight: 16,
+            backgroundColor: theme.colors.background,
+          }}
+        />
+        <View style={{ flex: 1 }}>
+          <Text
+            fontWeight="bold"
+            fontSize="subheading"
+            style={{ color: theme.colors.textSecondary, marginBottom: 4 }}
+          >
+            {repo.fullName}
+          </Text>
+          <Text style={{ color: theme.colors.textPrimary, marginTop: 4 }}>
+            {repo.description}
+          </Text>
+          <Text style={{ color: theme.colors.primary, marginTop: 4 }}>
+            {repo.language}
+          </Text>
+        </View>
+      </View>
       <View
         style={{
-          backgroundColor: theme.colors.background,
-          padding: 16,
-          borderRadius: 8,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginTop: 16,
+          gap: 10,
         }}
       >
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Image
-            source={{ uri: repo.ownerAvatarUrl }}
-            style={{
-              width: 64,
-              height: 64,
-              borderRadius: 32,
-              marginRight: 16,
-              backgroundColor: theme.colors.background,
-            }}
-          />
-          <View style={{ flex: 1 }}>
-            <Text
-              fontWeight="bold"
-              fontSize="subheading"
-              style={{ color: theme.colors.textSecondary, marginBottom: 4 }}
-            >
-              {repo.fullName}
-            </Text>
-            <Text style={{ color: theme.colors.textPrimary, marginTop: 4 }}>
-              {repo.description}
-            </Text>
-            <Text style={{ color: theme.colors.primary, marginTop: 4 }}>
-              {repo.language}
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 16,
-            gap: 10,
-          }}
-        >
-          <StatsItem
-            label="Stars"
-            value={overThousandFormatter.format(repo.stargazersCount)}
-            color={theme.colors.textPrimary}
-          />
-          <StatsItem
-            label="Forks"
-            value={overThousandFormatter.format(repo.forksCount)}
-            color={theme.colors.textPrimary}
-          />
-          <StatsItem
-            label="Reviews"
-            value={overThousandFormatter.format(repo.reviewCount)}
-            color={theme.colors.textPrimary}
-          />
-          <StatsItem
-            label="Rating"
-            value={repo.ratingAverage}
-            color={theme.colors.textPrimary}
-          />
-        </View>
-        <Button
-          title="Open in GitHub"
-          onPress={() => Linking.openURL(repo.url)}
-          color={theme.colors.primary}
+        <StatsItem
+          label="Stars"
+          value={overThousandFormatter.format(repo.stargazersCount)}
+          color={theme.colors.textPrimary}
         />
-        {hasToken && (
-          <TouchableWithoutFeedback
-            onPress={() =>
-              router.push({
-                pathname: "/create-review",
-                params: {
-                  repositoryName: repo.name,
-                  ownerName: repo.ownerName,
-                },
-              })
-            }
+        <StatsItem
+          label="Forks"
+          value={overThousandFormatter.format(repo.forksCount)}
+          color={theme.colors.textPrimary}
+        />
+        <StatsItem
+          label="Reviews"
+          value={overThousandFormatter.format(repo.reviewCount)}
+          color={theme.colors.textPrimary}
+        />
+        <StatsItem
+          label="Rating"
+          value={repo.ratingAverage}
+          color={theme.colors.textPrimary}
+        />
+      </View>
+      <Button
+        title="Open in GitHub"
+        onPress={() => Linking.openURL(repo.url)}
+        color={theme.colors.primary}
+      />
+      {hasToken && (
+        <TouchableWithoutFeedback
+          onPress={() =>
+            router.push({
+              pathname: "/create-review",
+              params: {
+                repositoryName: repo.name,
+                ownerName: repo.ownerName,
+              },
+            })
+          }
+        >
+          <View
+            style={{
+              backgroundColor: theme.colors.primary,
+              borderRadius: 4,
+              alignItems: "center",
+              paddingVertical: 12,
+              marginTop: 16,
+            }}
           >
-            <View
-              style={{
-                backgroundColor: theme.colors.primary,
-                borderRadius: 4,
-                alignItems: "center",
-                paddingVertical: 12,
-                marginTop: 16,
-              }}
-            >
-              <Text
-                style={{
-                  color: theme.colors.textPrimary,
-                  fontWeight: "bold",
-                  fontSize: 16,
-                }}
-              >
-                Create review
-              </Text>
-            </View>
-          </TouchableWithoutFeedback>
-        )}
-        {repo.reviews?.edges?.length > 0 && (
-          <View style={{ marginTop: 24 }}>
             <Text
-              fontWeight="bold"
               style={{
-                color: theme.colors.textSecondary,
-                marginBottom: 8,
+                color: theme.colors.textPrimary,
+                fontWeight: "bold",
                 fontSize: 16,
               }}
             >
-              Reviews
+              Create review
             </Text>
-            <RepositoryReviews
-              reviews={repo.reviews.edges.map((e: any) => e.node)}
-            />
           </View>
-        )}
-      </View>
-    </ScrollView>
+        </TouchableWithoutFeedback>
+      )}
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    flexGrow: 1,
-  },
-  button: {
-    backgroundColor: "#0366d6",
-    borderRadius: 4,
-    alignItems: "center",
-    paddingVertical: 12,
-    marginTop: 12,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-});
 
 export default RepositoryDetails;
