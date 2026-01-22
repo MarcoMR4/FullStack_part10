@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client/react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { GET_REPOSITORIES } from "../graphql/queries";
+import { GET_REPOSITORIES, GET_REPOSITORY_DETAILS } from "../graphql/queries";
 import { FilterToQuery } from "../types/repositoryListFilters";
 import { RepositoryEdge } from "../types/respository";
 
@@ -35,7 +35,17 @@ export default function useRepositories() {
   const params = useLocalSearchParams();
   const router = useRouter();
 
-  // Variables para la query
+  // SELECTED REPOSITORY DETAILS QUERY
+  const {
+    data: detailsData,
+    loading: detailsLoading,
+    error: detailsError,
+    refetch: refetchDetails,
+  } = useQuery(GET_REPOSITORY_DETAILS, {
+    variables: { repositoryId: selectedId },
+    skip: !selectedId,
+  });
+
   const repositoryQueryVars = {
     orderBy: FILTER_TO_QUERY[filter].orderBy,
     orderDirection: FILTER_TO_QUERY[filter].orderDirection,
@@ -113,5 +123,10 @@ export default function useRepositories() {
     refetch,
     fetchNextPage,
     hasNextPage,
+    // Selected repository details
+    detailsData,
+    detailsLoading,
+    detailsError,
+    refetchDetails,
   };
 }

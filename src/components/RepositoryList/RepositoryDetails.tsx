@@ -1,10 +1,8 @@
 import Text from "@/src/components/Text";
 import AuthStorageContext from "@/src/context/AuthStorageContext";
 import { useThemeScheme } from "@/src/context/ThemeContext";
-import { GET_REPOSITORY_DETAILS } from "@/src/graphql/queries";
 import { getTheme } from "@/src/theme";
 import { overThousandFormatter } from "@/src/utils/quantitiesFormatters";
-import { useQuery } from "@apollo/client/react";
 import { useRouter } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 import {
@@ -17,6 +15,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import useRepositories from "../../hooks/useRepositories";
 import RepositoryReviews from "./RepositoryReviews";
 
 // Componente para mostrar cada estadística
@@ -51,34 +50,33 @@ interface RepositoryDetailsProps {
 const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({
   repositoryId,
 }) => {
-  const id = repositoryId;
-
   const { themeScheme } = useThemeScheme();
-
   const theme = getTheme(themeScheme);
 
-  const { data, loading, error } = useQuery(GET_REPOSITORY_DETAILS, {
-    variables: { repositoryId: id },
-  });
+  const router = useRouter();
   const authStorage = useContext(AuthStorageContext);
   const [hasToken, setHasToken] = useState(false);
-  const router = useRouter();
+
+  const { detailsData, detailsLoading, detailsError, setSelectedId } =
+    useRepositories();
+
+  // Sincronize selectedId con repositoryId prop
+  useEffect(() => {
+    if (repositoryId) setSelectedId(repositoryId);
+    return () => setSelectedId(null);
+  }, [repositoryId, setSelectedId]);
 
   useEffect(() => {
-    let mounted = true;
     const checkToken = async () => {
       if (authStorage) {
         const token = await authStorage.getAccessToken();
-        if (mounted) setHasToken(!!token);
+        setHasToken(!!token);
       }
     };
     checkToken();
-    return () => {
-      mounted = false;
-    };
   }, [authStorage]);
 
-  if (loading) {
+  if (detailsLoading) {
     return (
       <ActivityIndicator
         style={{ flex: 1, marginTop: 40 }}
@@ -86,14 +84,14 @@ const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({
       />
     );
   }
-  if (error) {
+  if (detailsError) {
     return (
       <Text style={{ color: theme.colors.error, margin: 20 }}>
         Error loading repository details
       </Text>
     );
   }
-  const repo = (data as any)?.repository;
+  const repo = (detailsData as any)?.repository;
   if (!repo) return null;
 
   return (
@@ -171,7 +169,6 @@ const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({
           onPress={() => Linking.openURL(repo.url)}
           color={theme.colors.primary}
         />
-        {/* Botón para crear review solo si autenticado */}
         {hasToken && (
           <TouchableWithoutFeedback
             onPress={() =>
