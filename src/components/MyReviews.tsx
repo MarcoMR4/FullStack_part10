@@ -1,11 +1,20 @@
-import { useQuery } from "@apollo/client/react";
+import { useMutation, useQuery } from "@apollo/client/react";
 import React from "react";
-import { ActivityIndicator, FlatList, View } from "react-native";
+import {
+    ActivityIndicator,
+    Alert,
+    FlatList,
+    Linking,
+    View,
+} from "react-native";
 import { useThemeScheme } from "../context/ThemeContext";
 import { GET_ME } from "../graphql/queries";
 import { getTheme } from "../theme";
 import Text from "./Text";
 import UserReviewItem from "./UserReviewItem";
+
+import { useRouter } from "expo-router";
+import { DELETE_REVIEW } from "../graphql/mutations";
 
 const MyReviews: React.FC = () => {
   const { themeScheme } = useThemeScheme();
@@ -15,7 +24,27 @@ const MyReviews: React.FC = () => {
     fetchPolicy: "cache-and-network",
   });
 
-  if (loading) {
+  const router = useRouter();
+  const [deleteReviewMutation, { loading: deleteLoading }] =
+    useMutation(DELETE_REVIEW);
+
+  const deleteReview = async (id: string) => {
+    try {
+      const { data } = await deleteReviewMutation({
+        variables: { deleteReviewId: id },
+        refetchQueries: [
+          { query: GET_ME, variables: { includeReviews: true, first: 5 } },
+        ],
+      });
+      if (data && (data as any).deleteReview) {
+        router.replace("/reviews");
+      }
+    } catch (e) {
+      console.log("Error deleting review:", e);
+    }
+  };
+
+  if (loading || deleteLoading) {
     return (
       <ActivityIndicator
         style={{ marginTop: 40 }}
@@ -55,8 +84,27 @@ const MyReviews: React.FC = () => {
           repositoryName={item.repository?.name || ""}
           createdAt={item.createdAt}
           text={item.text}
-          onViewRepository={() => {}}
-          onDeleteReview={() => {}}
+          onViewRepository={() => {
+            if (item.repository?.url) {
+              Linking.openURL(item.repository.url);
+            }
+          }}
+          onDeleteReview={() => {
+            Alert.alert(
+              "Delete review",
+              "Are you sure you want to delete this review?",
+              [
+                { text: "Cancel", style: "cancel" },
+                {
+                  text: "Delete",
+                  style: "destructive",
+                  onPress: () => {
+                    deleteReview(item.id);
+                  },
+                },
+              ],
+            );
+          }}
         />
       )}
     />

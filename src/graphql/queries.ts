@@ -66,6 +66,7 @@ export const GET_ME = gql`
             rating
             repository {
               name
+              url
             }
             text
           }
