@@ -11,7 +11,7 @@ const MyReviews: React.FC = () => {
   const { themeScheme } = useThemeScheme();
   const theme = getTheme(themeScheme);
   const { data, loading, error } = useQuery(GET_ME, {
-    variables: { reviews: true, first: 20 },
+    variables: { includeReviews: true, first: 5 },
     fetchPolicy: "cache-and-network",
   });
 

@@ -15,9 +15,6 @@ export default function TabLayout() {
   // Check if user is authenticated
   const { data } = useQuery<GetMeData>(GET_ME, {
     errorPolicy: "ignore",
-    variables: {
-      reviews: false,
-    },
   });
 
   const isAuthenticated = !!data?.me;

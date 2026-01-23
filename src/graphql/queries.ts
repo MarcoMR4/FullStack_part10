@@ -52,12 +52,12 @@ export const GET_REPOSITORIES = gql`
 `;
 
 export const GET_ME = gql`
-  query getMe($reviews: Boolean!, $first: Int, $after: String) {
+  query getMe($includeReviews: Boolean = false, $first: Int, $after: String) {
     me {
       id
       username
       reviewCount
-      reviews(first: $first, after: $after) @include(if: $reviews) {
+      reviews(first: $first, after: $after) @include(if: $includeReviews) {
         edges {
           cursor
           node {
