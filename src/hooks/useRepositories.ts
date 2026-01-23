@@ -102,11 +102,11 @@ export default function useRepositories() {
   };
 
   const repositoryQueryVars = {
-    orderBy: FILTER_TO_QUERY[filter].orderBy,
-    orderDirection: FILTER_TO_QUERY[filter].orderDirection,
-    searchKeyword: keyword.trim() !== "" ? keyword : "",
+    orderBy: FILTER_TO_QUERY[filter]?.orderBy || "CREATED_AT",
+    orderDirection: FILTER_TO_QUERY[filter]?.orderDirection || "DESC",
+    searchKeyword: typeof keyword === "string" ? keyword.trim() : "",
     first: PAGE_SIZE,
-    after,
+    after: typeof after === "string" ? after : undefined,
   };
 
   const { data, loading, error, refetch, fetchMore } =
