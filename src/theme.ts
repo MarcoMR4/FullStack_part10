@@ -58,7 +58,7 @@ export const getTheme = (scheme: "light" | "dark" = "dark"): Theme => ({
     tabIconDefault: scheme === "dark" ? "#9BA1A6" : "#687076",
     tabIconSelected: scheme === "dark" ? "#fff" : getPlatformPrimaryColor(),
     error: "#d73a4a",
-    date: scheme === "dark" ? "#7a7a7a" : "#bdbdbd",
+    date: scheme === "dark" ? "#878787" : "#524f4f",
   },
   forms: {
     placeholder: scheme === "dark" ? "#a1c6f1ff" : "#687076",
